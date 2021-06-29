@@ -12,7 +12,7 @@ describe('EmployeeService', () => {
     expect(employees.length).toBeGreaterThan(0);
   });
 
-  it('should return employee records', () => {
+  it('should insert a new employee and return the inserted employee record', () => {
     let employee = {
       firstName: 'Mo',
       lastName: 'Abjal',
