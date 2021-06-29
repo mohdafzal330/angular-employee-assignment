@@ -80,7 +80,7 @@
           <input
             [disabled]="!form.valid"
             type="button"
-            (click)="addEmployee()"
+            (click)="addUpdateEmployee()"
             class="form-control btn btn-success mt-3"
             value="Save Details"
           />
@@ -98,6 +98,7 @@
             <th>Email</th>
             <th>DOB</th>
             <th>Address</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -107,6 +108,22 @@
             <td>{{ employee.email }}</td>
             <td>{{ employee.dob }}</td>
             <td>{{ employee.address }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="fillEmployeeDetailsIntoForm(employee)"
+                title="Edit"
+              >
+                <i class="fa fa-pencil"></i>
+              </button>
+              <button
+                class="btn btn-sm btn-danger m-1"
+                (click)="deleteEmployee(employee)"
+                title="Delete"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

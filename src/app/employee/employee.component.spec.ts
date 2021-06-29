@@ -6,8 +6,8 @@ describe('EmployeeComponent', () => {
   let service: EmployeeService;
 
   beforeEach(() => {
-    component = new EmployeeComponent(new EmployeeService());
-    service = new EmployeeService();
+    component = new EmployeeComponent(new EmployeeService(null));
+    service = new EmployeeService(null);
   });
 
   it('should create the component', () => {
@@ -57,12 +57,12 @@ describe('EmployeeComponent', () => {
         address: 'Bareilly - UP, India',
       },
     ];
-    spyOn(service, 'getAllEmployees').and.callFake(() => {
-      return employees;
-    });
+    // spyOn(service, 'getAllEmployees').and.callFake(() => {
+    //   return employees;
+    // });
 
     component.ngOnInit();
 
-    expect(component.employeeRecords).toEqual(employees);
+    expect(component.employeeRecords).toEqual(employees); // tobecalled
   });
 });
