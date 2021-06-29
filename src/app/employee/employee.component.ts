@@ -45,7 +45,6 @@ export class EmployeeComponent implements OnInit {
   //  To get all employees
   getAllEmployee() {
     this.employeeService.getAllEmployees().subscribe((response: Employee[]) => {
-      console.log(response);
       this.employeeRecords = response;
     });
   }
@@ -88,8 +87,6 @@ export class EmployeeComponent implements OnInit {
     //  Storing the employee id for future purpose
     //  while updating the employee
     this.currentEmployeeId = employee.id;
-    console.log(this.form.value);
-    console.log(this.currentEmployeeId);
   }
 
   //  method to delete the employee
