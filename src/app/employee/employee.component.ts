@@ -44,7 +44,7 @@ export class EmployeeComponent implements OnInit {
   //  To get all employees
   getAllEmployee() {
     try {
-      this.employeeRecords = this.employeeService.getAllEmployee();
+      this.employeeRecords = this.employeeService.getAllEmployees();
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +65,7 @@ export class EmployeeComponent implements OnInit {
     return control && control.touched && control.invalid;
   }
 
+  //  Private method to get perticular control object
   private getControl(controlName: string) {
     return this.form.get(controlName);
   }
