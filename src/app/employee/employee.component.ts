@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from 'src/services/employee.service';
+import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
 import { Employee } from './Employee';
 
 @Component({
@@ -10,7 +10,7 @@ import { Employee } from './Employee';
 })
 export class EmployeeComponent implements OnInit {
   public employeeRecords: Employee[] = [];
-  private currentEmployeeId: number = 0;
+  public currentEmployeeId: number = 0;
   //  Preparing Reactive form froup object
   public form = new FormGroup({
     firstName: new FormControl('', [
@@ -36,7 +36,8 @@ export class EmployeeComponent implements OnInit {
       Validators.maxLength(500),
     ]),
   });
-  constructor(private employeeService: EmployeeService) {}
+
+  constructor(@Inject(EMP_SERVICE) private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
     this.getAllEmployee();
@@ -50,7 +51,12 @@ export class EmployeeComponent implements OnInit {
   }
 
   // To insert/update employee
-  addUpdateEmployee() {
+  saveUpdateEmployee() {
+    if (!this.form.valid) {
+      alert('Please fill all & valid employee details');
+      return;
+    }
+
     this.employeeService
       .saveUpdateEmployee(this.currentEmployeeId, this.form.value)
       .subscribe((respone) => {
@@ -60,9 +66,10 @@ export class EmployeeComponent implements OnInit {
           let currentEmployee = this.employeeRecords.find(
             (f) => f.id == this.currentEmployeeId
           );
+
           if (!currentEmployee) return;
           let index = this.employeeRecords.indexOf(currentEmployee);
-          this.employeeRecords[index] = this.form.value;
+          this.employeeRecords[index] = respone;
         }
 
         //Reseting the employees form
@@ -70,8 +77,8 @@ export class EmployeeComponent implements OnInit {
       });
   }
 
-  //  method to delete the employee
-  fillEmployeeDetailsIntoForm(employee: Employee) {
+  //  method to fill the employee details into employee form
+  fillEmployeeDetailsIntoForm(employee?: Employee) {
     if (!employee) return;
 
     //  Setting the employee details into employee form

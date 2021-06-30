@@ -1,15 +1,28 @@
-import { EmployeeService } from 'src/services/employee.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
+import { Employee } from './Employee';
 import { EmployeeComponent } from './employee.component';
-
 describe('EmployeeComponent', () => {
   let component: EmployeeComponent;
   let service: EmployeeService;
 
-  beforeEach(() => {
-    component = new EmployeeComponent(new EmployeeService(null));
-    service = new EmployeeService(null);
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [EmployeeComponent],
+      imports: [HttpClientTestingModule],
+      providers: [{ provide: EMP_SERVICE, useClass: EmployeeService }],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
+  beforeEach(() => {
+    const fixture = TestBed.createComponent(EmployeeComponent);
+    component = fixture.componentInstance;
+    service = TestBed.inject(EMP_SERVICE);
+  });
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
@@ -46,9 +59,41 @@ describe('EmployeeComponent', () => {
     expect(component.isValidControl('address')).toBeFalsy();
   });
 
+  it('should fill the values inside form controls', () => {
+    let empObj = {
+      firstName: 'Mo',
+      lastName: 'Abjal',
+      contactNumber: '9012114316',
+      email: 'moh@gmail.com',
+      dob: '2021-06-04',
+      address: '44-Dahiya',
+      id: 4,
+    };
+    component.fillEmployeeDetailsIntoForm(empObj);
+
+    expect(component.form.value.firstName).toEqual(empObj.firstName);
+    expect(component.form.value.lastName).toEqual(empObj.lastName);
+    expect(component.form.value.contactNumber).toEqual(empObj.contactNumber);
+    expect(component.form.value.email).toEqual(empObj.email);
+    expect(component.form.value.dob).toEqual(empObj.dob);
+    expect(component.form.value.address).toEqual(empObj.address);
+  });
+
+  it('should not fill the values inside form controls when we pass an empty object', () => {
+    component.fillEmployeeDetailsIntoForm();
+
+    expect(component.form.value.firstName).toBe('');
+    expect(component.form.value.lastName).toBe('');
+    expect(component.form.value.contactNumber).toBe('');
+    expect(component.form.value.email).toBe('');
+    expect(component.form.value.dob).toBe('');
+    expect(component.form.value.address).toBe('');
+  });
+
   it('should get the employees and push into existing records', () => {
-    let employees = [
+    let employees: Employee[] = [
       {
+        id: 1,
         firstName: 'Mo',
         lastName: 'Abjal',
         contactNumber: '9012114316',
@@ -56,13 +101,125 @@ describe('EmployeeComponent', () => {
         dob: '08/01/1997',
         address: 'Bareilly - UP, India',
       },
+      {
+        id: 2,
+        firstName: 'Mo',
+        lastName: 'Abjal',
+        contactNumber: '901214316',
+        email: 'mohdafzal330@gmail.com',
+        dob: '08/01/1997',
+        address: 'Bareilly - UP, India',
+      },
     ];
-    // spyOn(service, 'getAllEmployees').and.callFake(() => {
-    //   return employees;
-    // });
+    spyOn(service, 'getAllEmployees').and.returnValue(of(employees));
 
     component.ngOnInit();
 
-    expect(component.employeeRecords).toEqual(employees); // tobecalled
+    expect(service.getAllEmployees).toHaveBeenCalled();
+    expect(component.employeeRecords).toEqual(employees);
+  });
+
+  it('should insert the new employee records into exixsting employee records', () => {
+    let employee: Employee = {
+      id: 1,
+      firstName: 'Mo',
+      lastName: 'Abjal',
+      contactNumber: '9012114316',
+      email: 'mohdafzal330@gmail.com',
+      dob: '08/01/1997',
+      address: 'Bareilly - UP, India',
+    };
+
+    spyOn(service, 'saveUpdateEmployee').and.returnValue(of(employee));
+
+    component.saveUpdateEmployee();
+
+    expect(service.saveUpdateEmployee).toHaveBeenCalled();
+    expect(component.employeeRecords.indexOf(employee)).toBeGreaterThan(-1);
+  });
+
+  it('should update the existing employee record', () => {
+    component.employeeRecords = [
+      {
+        id: 1,
+        firstName: 'Mo',
+        lastName: 'Abjal',
+        contactNumber: '9012114316',
+        email: 'mohdafzal330@gmail.com',
+        dob: '08/01/1997',
+        address: 'Bareilly - UP, India',
+      },
+      {
+        id: 2,
+        firstName: 'Mo',
+        lastName: 'Abjal',
+        contactNumber: '901214316',
+        email: 'mohdafzal330@gmail.com',
+        dob: '08/01/1997',
+        address: 'Bareilly - UP, India',
+      },
+    ];
+    let employeeToUpdate: Employee = {
+      id: 2,
+      firstName: 'Mo',
+      lastName: 'Abjal',
+      contactNumber: '901214316',
+      email: 'mohdafzal330@gail.com',
+      dob: '08/01/1997',
+      address: 'Bareilly - UP, India',
+    };
+
+    spyOn(service, 'saveUpdateEmployee').and.returnValue(of(employeeToUpdate));
+
+    component.fillEmployeeDetailsIntoForm(employeeToUpdate);
+
+    component.saveUpdateEmployee();
+
+    let currentEmployee = component.employeeRecords.find(
+      (employee) => employee.id == employeeToUpdate.id
+    );
+
+    if (!currentEmployee) return;
+
+    expect(service.saveUpdateEmployee).toHaveBeenCalled();
+    expect(currentEmployee).toEqual(employeeToUpdate);
+  });
+
+  it('should delete the employee record from existing employee records', () => {
+    component.employeeRecords = [
+      {
+        firstName: 'Mo',
+        lastName: 'Abjal khan bar',
+        contactNumber: '9012114316',
+        email: 'mh@gmail.com',
+        dob: '2021-06-04',
+        address: '44-Dahiya',
+        id: 3,
+      },
+      {
+        firstName: 'Noorul',
+        lastName: 'Hassan',
+        contactNumber: '9012114318',
+        email: 'mo@gail.com',
+        dob: '2021-06-12',
+        address: '44-Daiya',
+        id: 4,
+      },
+    ];
+    let employeeToDelete = {
+      firstName: 'Noorul',
+      lastName: 'Hassan',
+      contactNumber: '9012114318',
+      email: 'mo@gail.com',
+      dob: '2021-06-12',
+      address: '44-Daiya',
+      id: 4,
+    };
+    spyOn(service, 'deleteEmployee').and.returnValue(of(true));
+
+    component.deleteEmployee(employeeToDelete);
+
+    expect(service.deleteEmployee).toHaveBeenCalled();
+    expect(component.employeeRecords.indexOf(employeeToDelete)).toBe(-1);
   });
 });

@@ -9,83 +9,78 @@
     <div class="col-5">
       <h3 class="text-success">Employee Form</h3>
       <hr />
-
-      <form [formGroup]="form">
-        <div class="form-group col-6 float-left p-1">
-          <label for="firstName">First Name</label>
-          <input
-            formControlName="firstName"
-            type="text"
-            id="firstName"
-            class="form-control"
-            [class]="{ error: isValidControl('firstName') }"
-            maxlength="100"
-          />
-        </div>
-        <div class="form-group col-6 float-left p-1">
-          <label for="lastName">Last Name</label>
-          <input
-            formControlName="lastName"
-            type="text"
-            id="lastName"
-            class="form-control"
-            [class]="{ error: isValidControl('lastName') }"
-            maxlength="100"
-          />
-        </div>
-        <div class="form-group col-6 float-left p-1">
-          <label for="contact-number">Contact No.</label>
-          <input
-            formControlName="contactNumber"
-            type="text"
-            id="contact-number"
-            class="form-control"
-            [class]="{ error: isValidControl('contactNumber') }"
-            maxlength="15"
-          />
-        </div>
-        <div class="form-group col-6 float-left p-1">
-          <label for="email">Email</label>
-          <input
-            formControlName="email"
-            type="email"
-            id="email"
-            class="form-control"
-            [class]="{ error: isValidControl('email') }"
-            maxlength="200"
-          />
-        </div>
-        <div class="form-group col-6 float-left p-1">
-          <label for="dob">DOB</label>
-          <input
-            formControlName="dob"
-            type="date"
-            id="dob"
-            class="form-control"
-            [class]="{ error: isValidControl('dob') }"
-          />
-        </div>
-        <div class="form-group col-6 float-left p-1">
-          <label for="address">Address</label>
-          <input
-            formControlName="address"
-            type="text"
-            id="address"
-            class="form-control"
-            [class]="{ error: isValidControl('address') }"
-            maxlength="500"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            [disabled]="!form.valid"
-            type="button"
-            (click)="addUpdateEmployee()"
-            class="form-control btn btn-success mt-3"
-            value="Save Details"
-          />
-        </div>
-      </form>
+      <div class="row">
+        <form [formGroup]="form">
+          <div class="form-group col-6 float-left p-1">
+            <label for="firstName">First Name</label>
+            <input
+              formControlName="firstName"
+              type="text"
+              id="firstName"
+              class="form-control"
+              [class]="{ error: isValidControl('firstName') }"
+            />
+          </div>
+          <div class="form-group col-6 float-left p-1">
+            <label for="lastName">Last Name</label>
+            <input
+              formControlName="lastName"
+              type="text"
+              id="lastName"
+              class="form-control"
+              [class]="{ error: isValidControl('lastName') }"
+            />
+          </div>
+          <div class="form-group col-6 float-left p-1">
+            <label for="contact-number">Contact No.</label>
+            <input
+              formControlName="contactNumber"
+              type="text"
+              id="contact-number"
+              class="form-control"
+              [class]="{ error: isValidControl('contactNumber') }"
+            />
+          </div>
+          <div class="form-group col-6 float-left p-1">
+            <label for="email">Email</label>
+            <input
+              formControlName="email"
+              type="email"
+              id="email"
+              class="form-control"
+              [class]="{ error: isValidControl('email') }"
+            />
+          </div>
+          <div class="form-group col-6 float-left p-1">
+            <label for="dob">DOB</label>
+            <input
+              formControlName="dob"
+              type="date"
+              id="dob"
+              class="form-control"
+              [class]="{ error: isValidControl('dob') }"
+            />
+          </div>
+          <div class="form-group col-6 float-left p-1">
+            <label for="address">Address</label>
+            <input
+              formControlName="address"
+              type="text"
+              id="address"
+              class="form-control"
+              [class]="{ error: isValidControl('address') }"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="button"
+              (click)="saveUpdateEmployee()"
+              class="form-control btn btn-success mt-3"
+              value="Save Details"
+            />
+          </div>
+        </form>
+      </div>
     </div>
     <div class="col-7">
       <h3 class="text-success">Employee Records</h3>
@@ -98,7 +93,7 @@
             <th>Email</th>
             <th>DOB</th>
             <th>Address</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
