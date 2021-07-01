@@ -11,7 +11,8 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (request) {
+    console.log(request);
+    if (request && request.method == 'DELETE') {
       request = request.clone({
         headers: request.headers.set('AuthToken', 'JKLDSFKJFH834753RHIHJSKF'),
       });

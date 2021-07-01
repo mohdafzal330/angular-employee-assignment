@@ -19,8 +19,6 @@ export class EmployeeService {
 
   //  Service method to insert/update the employees records
   saveUpdateEmployee(id: number, employee: Employee): Observable<Employee> {
-    if (!employee) throw new Error('No data found');
-
     if (id > 0) return this.updateEmployee(id, employee);
     else return this.insertEmployee(employee);
   }
@@ -37,7 +35,6 @@ export class EmployeeService {
 
   //  Service method to delete the employees record
   deleteEmployee(id: number) {
-    if (!id) throw new Error('No employee specified');
     return this.httpService.delete(this.configUrl + '/' + id);
   }
 }

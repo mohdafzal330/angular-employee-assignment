@@ -10,7 +10,7 @@ import { Employee } from './Employee';
 })
 export class EmployeeComponent implements OnInit {
   public employeeRecords: Employee[] = [];
-  public currentEmployeeId: number = 0;
+  private currentEmployeeId: number = 0;
   //  Preparing Reactive form froup object
   public form = new FormGroup({
     firstName: new FormControl('', [
@@ -63,13 +63,18 @@ export class EmployeeComponent implements OnInit {
         if (respone && this.currentEmployeeId <= 0) {
           this.employeeRecords.push(respone);
         } else {
-          let currentEmployee = this.employeeRecords.find(
-            (f) => f.id == this.currentEmployeeId
-          );
-
-          if (!currentEmployee) return;
-          let index = this.employeeRecords.indexOf(currentEmployee);
-          this.employeeRecords[index] = respone;
+          let currentEmployee = this.employeeRecords[0];
+          for (
+            let loopIndex = 0;
+            loopIndex < this.employeeRecords.length;
+            loopIndex++
+          ) {
+            if (this.employeeRecords[loopIndex].id == this.currentEmployeeId) {
+              currentEmployee = this.employeeRecords[loopIndex];
+              this.employeeRecords[loopIndex] = respone;
+              break;
+            }
+          }
         }
 
         //Reseting the employees form
@@ -95,10 +100,9 @@ export class EmployeeComponent implements OnInit {
     //  while updating the employee
     this.currentEmployeeId = employee.id;
   }
-
   //  method to delete the employee
   deleteEmployee(employee: Employee) {
-    if (!employee) return;
+    if (employee.id <= 0) return;
     this.employeeService
       .deleteEmployee(employee.id)
       .subscribe((response: any) => {
@@ -112,7 +116,7 @@ export class EmployeeComponent implements OnInit {
   //  Method to detect weather a control is valid or not
   isValidControl(controlName: string) {
     let control = this.getControl(controlName);
-    return control && control.touched && control.invalid;
+    return control && control.invalid && control.touched;
   }
 
   //  Private method to get perticular control object
