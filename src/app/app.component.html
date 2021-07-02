@@ -17,8 +17,9 @@
   <div class="row">
     <div class="col-12">
       <h5 style="float: right">
-        Current Timezone: <em class="text-info">{{ appSettings }}</em> <br />
-        Currency: <em class="text-info">{{ currency }}</em>
+        Current Timezone:
+        <em class="text-info">{{ appService.settings.timezone }}</em> <br />
+        Currency: <em class="text-info">{{ appService.settings.currency }}</em>
       </h5>
     </div>
   </div>

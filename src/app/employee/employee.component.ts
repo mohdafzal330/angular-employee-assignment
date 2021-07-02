@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
 import { Employee } from './Employee';
 
@@ -11,6 +12,7 @@ import { Employee } from './Employee';
 export class EmployeeComponent implements OnInit {
   public employeeRecords: Employee[] = [];
   private currentEmployeeId: number = 0;
+  private subscription = new Subscription();
   //  Preparing Reactive form froup object
   public form = new FormGroup({
     firstName: new FormControl('', [
@@ -45,11 +47,11 @@ export class EmployeeComponent implements OnInit {
 
   //  To get all employees
   getAllEmployee() {
-    let subs = this.employeeService
+    this.subscription = this.employeeService
       .getAllEmployees()
       .subscribe((response: Employee[]) => {
         this.employeeRecords = response;
-        subs.unsubscribe();
+        this.subscription.unsubscribe();
       });
   }
 
