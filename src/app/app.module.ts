@@ -1,8 +1,9 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { AppInitializerService } from 'src/services/app-initializer.service';
 import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
 import { StudentGuard } from 'src/services/student-graud.service';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
@@ -12,6 +13,10 @@ import { GlobalErrorHandler } from './common/validators/global-error-handler';
 import { EmployeeComponent } from './employee/employee.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { StudentComponent } from './student/student.component';
+
+export function appInitializerFactory(service: AppInitializerService) {
+  return () => service.initialize();
+}
 
 @NgModule({
   declarations: [
@@ -37,10 +42,17 @@ import { StudentComponent } from './student/student.component';
     ]),
   ],
   providers: [
+    AppInitializerService,
     StudentGuard,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: EMP_SERVICE, useClass: EmployeeService },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [AppInitializerService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
