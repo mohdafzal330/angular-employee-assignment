@@ -45,9 +45,12 @@ export class EmployeeComponent implements OnInit {
 
   //  To get all employees
   getAllEmployee() {
-    this.employeeService.getAllEmployees().subscribe((response: Employee[]) => {
-      this.employeeRecords = response;
-    });
+    let subs = this.employeeService
+      .getAllEmployees()
+      .subscribe((response: Employee[]) => {
+        this.employeeRecords = response;
+        subs.unsubscribe();
+      });
   }
 
   // To insert/update employee
