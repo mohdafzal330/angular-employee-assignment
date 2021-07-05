@@ -72,12 +72,12 @@
             />
           </div>
           <div class="form-group">
-            <input
-              type="button"
-              (click)="saveUpdateEmployee()"
+            <button
               class="form-control btn btn-success mt-3"
-              value="Save Details"
-            />
+              (click)="saveUpdateEmployee()"
+            >
+              {{ "SAVE" | translate }}
+            </button>
           </div>
         </form>
       </div>

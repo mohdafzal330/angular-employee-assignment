@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
 import { Employee } from './Employee';
@@ -39,7 +40,14 @@ export class EmployeeComponent implements OnInit {
     ]),
   });
 
-  constructor(@Inject(EMP_SERVICE) private employeeService: EmployeeService) {}
+  constructor(
+    @Inject(EMP_SERVICE) private employeeService: EmployeeService,
+    private translateService: TranslateService
+  ) {
+    translateService.setDefaultLang('en');
+
+    translateService.use('ar');
+  }
 
   ngOnInit(): void {
     this.getAllEmployee();
