@@ -1,9 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
 import { EmployeeService, EMP_SERVICE } from 'src/services/employee.service';
 import { Employee } from './Employee';
 import { EmployeeComponent } from './employee.component';
+
+let translations: any = { CARDS_TITLE: 'This is a test' };
+
+class FakeLoader implements TranslateLoader {
+  getTranslation(lang: string): Observable<any> {
+    return of(translations);
+  }
+}
+
 describe('EmployeeComponent', () => {
   let component: EmployeeComponent;
   let service: EmployeeService;
@@ -11,7 +22,16 @@ describe('EmployeeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EmployeeComponent],
-      imports: [HttpClientTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useClass: FakeLoader,
+            deps: [HttpClient],
+          },
+        }),
+      ],
       providers: [{ provide: EMP_SERVICE, useClass: EmployeeService }],
     }).compileComponents();
   });

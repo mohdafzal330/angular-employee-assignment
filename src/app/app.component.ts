@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { AppInitializerService } from 'src/services/app-initializer.service';
 
 @Component({
@@ -7,5 +8,12 @@ import { AppInitializerService } from 'src/services/app-initializer.service';
 })
 export class AppComponent {
   title = 'demo-app';
-  constructor(public appService: AppInitializerService) {}
+  constructor(
+    public appService: AppInitializerService,
+    translateService: TranslateService
+  ) {
+    translateService.setDefaultLang('en');
+
+    translateService.use('ar');
+  }
 }
